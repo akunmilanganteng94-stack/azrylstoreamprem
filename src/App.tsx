@@ -52,8 +52,10 @@ export const App: React.FC = () => {
         {!user ? (
           /* Non-logged in visitors see the Landing Page */
           <LandingView
+            onOpenAuth={(mode) => openAuth(mode)}
             onOpenLogin={() => openAuth('login')}
             onOpenRegister={() => openAuth('register')}
+            onExplore={() => openAuth('login')}
           />
         ) : (
           /* Logged in users see the interactive Views */
