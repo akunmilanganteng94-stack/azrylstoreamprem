@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Sparkles,
   Wallet,
   PlusCircle,
   Sun,
@@ -55,10 +54,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenA
           onClick={() => onSelectTab('home')}
           className="flex items-center gap-2.5 cursor-pointer group select-none"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-purple-700 to-indigo-600 p-0.5 shadow-md shadow-purple-900/10 group-hover:scale-105 transition-transform">
-            <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-purple-600 group-hover:rotate-12 transition-transform" />
-            </div>
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md shadow-purple-900/10 group-hover:scale-105 transition-transform border border-purple-200/80 bg-white flex items-center justify-center">
+            <img
+              src="https://cdn.phototourl.com/free/2026-09-10-1fc9669a-0454-4988-b339-76c575b6604b.png"
+              alt="AZRYL STORE"
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
@@ -130,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onOpenA
             </div>
           ) : (
             <button
-              onClick={onOpenAuthModal}
+              onClick={() => onOpenAuthModal?.()}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-xs sm:text-sm font-bold text-white shadow-md shadow-purple-600/20 transition-all active:scale-95"
             >
               <UserIcon className="w-4 h-4" />
