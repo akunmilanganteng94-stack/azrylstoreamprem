@@ -58,6 +58,8 @@ export const AdminView: React.FC = () => {
   const [deposits, setDeposits] = useState<Deposit[]>([]);
   const [depositFilter, setDepositFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING');
   const [depositSearch, setDepositSearch] = useState('');
+  const [approveModalOpen, setApproveModalOpen] = useState(false);
+  const [selectedDepositForApprove, setSelectedDepositForApprove] = useState<Deposit | null>(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedDepositForReject, setSelectedDepositForReject] = useState<Deposit | null>(null);
   const [rejectReason, setRejectReason] = useState('Bukti transfer tidak valid atau dana belum masuk');
@@ -223,11 +225,16 @@ export const AdminView: React.FC = () => {
     }
   }, [activeTab, fetchDeposits, fetchUsers, fetchOrders, fetchSettings, fetchLogs]);
 
-  // Handle Approve Deposit
-  const handleApproveDeposit = async (dep: Deposit) => {
-    if (!window.confirm(`Setujui deposit ${dep.id} nominal Rp${dep.amount.toLocaleString('id-ID')} untuk @${dep.username}?`)) {
-      return;
-    }
+  // Handle Approve Deposit Modal Open
+  const handleOpenApproveModal = (dep: Deposit) => {
+    setSelectedDepositForApprove(dep);
+    setApproveModalOpen(true);
+  };
+
+  // Handle Approve Deposit Submit
+  const handleApproveDepositSubmit = async () => {
+    if (!selectedDepositForApprove) return;
+    const dep = selectedDepositForApprove;
     setActionLoadingId(dep.id);
     try {
       const res = await fetch(`/api/admin/deposits/${dep.id}/approve`, {
@@ -236,14 +243,16 @@ export const AdminView: React.FC = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        showToast(data.message || `Deposit ${dep.id} berhasil disetujui!`);
+        showToast(data.message || `Deposit ${dep.id} berhasil disetujui! Saldo user telah bertambah.`);
+        setApproveModalOpen(false);
+        setSelectedDepositForApprove(null);
         fetchDeposits();
         fetchStats();
       } else {
         showToast(data.error || 'Gagal menyetujui deposit', 'error');
       }
     } catch (err: any) {
-      showToast('Terjadi kesalahan jaringan', 'error');
+      showToast('Terjadi kesalahan jaringan saat konfirmasi deposit', 'error');
     } finally {
       setActionLoadingId(null);
     }
@@ -310,9 +319,6 @@ export const AdminView: React.FC = () => {
   // Handle Toggle User Block
   const handleToggleBlock = async (u: AdminUserItem) => {
     const willBlock = !u.isBlocked;
-    if (!window.confirm(`${willBlock ? 'Blokir' : 'Buka blokir'} akun @${u.username}?`)) {
-      return;
-    }
     setActionLoadingId(u.id);
     try {
       const res = await fetch(`/api/admin/users/${u.id}/block`, {
@@ -365,7 +371,6 @@ export const AdminView: React.FC = () => {
 
   // Handle Retry Order
   const handleRetryOrder = async (orderId: string) => {
-    if (!window.confirm(`Jalankan ulang proses aktivasi pesanan ${orderId}?`)) return;
     setActionLoadingId(orderId);
     try {
       const res = await fetch(`/api/admin/orders/${orderId}/retry`, {
@@ -860,11 +865,11 @@ export const AdminView: React.FC = () => {
 
                       {/* Right: Actions */}
                       <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                        {isPending ? (
+                        {isPending && (
                           <>
                             <button
                               disabled={actionLoadingId === dep.id}
-                              onClick={() => handleApproveDeposit(dep)}
+                              onClick={() => handleOpenApproveModal(dep)}
                               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 disabled:opacity-50"
                             >
                               {actionLoadingId === dep.id ? (
@@ -888,15 +893,28 @@ export const AdminView: React.FC = () => {
                               <span>Tolak</span>
                             </button>
                           </>
-                        ) : (
-                          <span
-                            className={`text-xs font-bold px-3 py-1.5 rounded-xl border ${
-                              isApproved
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                : 'bg-rose-50 text-rose-700 border-rose-200'
-                            }`}
-                          >
-                            {isApproved ? 'Telah Disetujui' : 'Telah Ditolak'}
+                        )}
+
+                        {isRejected && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold px-3 py-1.5 rounded-xl border bg-rose-50 text-rose-700 border-rose-200">
+                              Telah Ditolak
+                            </span>
+                            <button
+                              disabled={actionLoadingId === dep.id}
+                              onClick={() => handleOpenApproveModal(dep)}
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 text-xs font-bold transition-all disabled:opacity-50"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Setujui Ulang</span>
+                            </button>
+                          </div>
+                        )}
+
+                        {isApproved && (
+                          <span className="text-xs font-bold px-3 py-1.5 rounded-xl border bg-emerald-50 text-emerald-700 border-emerald-200 flex items-center gap-1">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Telah Disetujui</span>
                           </span>
                         )}
                       </div>
@@ -1674,6 +1692,97 @@ export const AdminView: React.FC = () => {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL: SETUJUI / APPROVE DEPOSIT */}
+      {/* ========================================================================= */}
+      {approveModalOpen && selectedDepositForApprove && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-purple-950/60 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-purple-200 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-purple-100">
+              <h3 className="text-base font-extrabold text-emerald-600 flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                <span>Konfirmasi Persetujuan Deposit</span>
+              </h3>
+              <button
+                onClick={() => setApproveModalOpen(false)}
+                className="p-1 rounded-xl text-purple-400 hover:text-purple-700"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="p-3.5 rounded-2xl bg-purple-50/70 border border-purple-100 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-purple-600">ID Deposit:</span>
+                  <span className="font-mono font-bold text-purple-950 bg-white px-2 py-0.5 rounded-md border border-purple-200">
+                    {selectedDepositForApprove.id}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-purple-600">Target User:</span>
+                  <span className="font-bold text-purple-950">@{selectedDepositForApprove.username}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-purple-600">Nama Pengirim:</span>
+                  <span className="font-bold text-purple-950">{selectedDepositForApprove.payerName || '-'}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-purple-600">Metode:</span>
+                  <span className="font-extrabold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+                    {selectedDepositForApprove.paymentMethod}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center pt-2 border-t border-purple-200/60">
+                  <span className="text-purple-700 font-bold">Nominal Saldo Ditambahkan:</span>
+                  <span className="font-extrabold text-sm text-emerald-600">
+                    Rp{selectedDepositForApprove.amount.toLocaleString('id-ID')}
+                  </span>
+                </div>
+              </div>
+
+              {selectedDepositForApprove.proofNote && (
+                <div className="p-2.5 rounded-xl bg-purple-50 text-[11px] text-purple-800 border border-purple-100">
+                  <span className="font-semibold">Bukti/Catatan: </span>
+                  <span>{selectedDepositForApprove.proofNote}</span>
+                </div>
+              )}
+
+              <div className="p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-[11px] leading-relaxed">
+                <p className="font-bold mb-0.5">Perhatian:</p>
+                <p>Setelah Anda menyetujui, saldo akun <strong>@{selectedDepositForApprove.username}</strong> akan otomatis bertambah sebesar <strong>Rp{selectedDepositForApprove.amount.toLocaleString('id-ID')}</strong> dan status diperbarui menjadi APPROVED.</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-purple-100">
+              <button
+                onClick={() => setApproveModalOpen(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-purple-700 hover:bg-purple-50 transition-all"
+              >
+                Batal
+              </button>
+              <button
+                disabled={actionLoadingId === selectedDepositForApprove.id}
+                onClick={handleApproveDepositSubmit}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 disabled:opacity-50 active:scale-95"
+              >
+                {actionLoadingId === selectedDepositForApprove.id ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Menyetujui...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Ya, Setujui & Tambah Saldo</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

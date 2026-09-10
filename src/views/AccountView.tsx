@@ -13,6 +13,7 @@ import {
   Loader2,
   Calendar,
   Lock,
+  RefreshCw,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -22,7 +23,7 @@ interface AccountViewProps {
 }
 
 export const AccountView: React.FC<AccountViewProps> = ({ onGoToAdmin }) => {
-  const { user, token, logout, settings } = useAuth();
+  const { user, token, logout, settings, refreshUser } = useAuth();
   const { showToast } = useToast();
 
   const [oldPassword, setOldPassword] = useState('');
@@ -30,9 +31,38 @@ export const AccountView: React.FC<AccountViewProps> = ({ onGoToAdmin }) => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [loadingPass, setLoadingPass] = useState(false);
   const [passError, setPassError] = useState<string | null>(null);
+  const [syncingRole, setSyncingRole] = useState(false);
 
   const waAdminUrl = settings?.waAdmin || 'https://wa.me/6285199219856';
   const waChannelUrl = settings?.waChannel || 'https://whatsapp.com/channel/0029VbCwLl7J3jv1QSig1V0C';
+
+  const handleSyncFirebaseRole = async () => {
+    setSyncingRole(true);
+    try {
+      const res = await fetch('/api/auth/sync-role', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        await refreshUser();
+        showToast(
+          data.isAdmin
+            ? 'Akun Anda telah berstatus ADMINISTRATOR!'
+            : 'Sinkronisasi berhasil. Status: ' + data.user?.role,
+          'success'
+        );
+      } else {
+        showToast(data.error || 'Gagal sinkronisasi dari Firebase', 'error');
+      }
+    } catch {
+      showToast('Koneksi ke server gagal', 'error');
+    } finally {
+      setSyncingRole(false);
+    }
+  };
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,6 +202,15 @@ export const AccountView: React.FC<AccountViewProps> = ({ onGoToAdmin }) => {
                 <span>Buka Panel Admin (Kelola Deposit & User)</span>
               </button>
             )}
+
+            <button
+              onClick={handleSyncFirebaseRole}
+              disabled={syncingRole}
+              className="w-full py-2.5 rounded-2xl border border-purple-200 bg-purple-50/80 hover:bg-purple-100 text-purple-800 text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-98 disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 text-purple-600 ${syncingRole ? 'animate-spin' : ''}`} />
+              <span>{syncingRole ? 'Menyinkronkan dari Firebase...' : 'Sinkronkan Status Admin Firebase'}</span>
+            </button>
 
             <button
               onClick={() => logout()}

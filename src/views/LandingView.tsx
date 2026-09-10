@@ -17,15 +17,61 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 interface LandingViewProps {
-  onOpenAuth: (mode: 'login' | 'register') => void;
-  onExplore: () => void;
+  onOpenAuth?: (mode: 'login' | 'register') => void;
+  onOpenLogin?: () => void;
+  onOpenRegister?: () => void;
+  onExplore?: () => void;
 }
 
-export const LandingView: React.FC<LandingViewProps> = ({ onOpenAuth, onExplore }) => {
+export const LandingView: React.FC<LandingViewProps> = ({
+  onOpenAuth,
+  onOpenLogin,
+  onOpenRegister,
+  onExplore,
+}) => {
   const { settings } = useAuth();
   const priceEceran = settings?.priceEceran ?? 300;
   const priceBulk = settings?.priceBulk ?? 400;
   const amPhotoUrl = settings?.amPhoto || 'https://cdn.phototourl.com/free/2026-09-10-6e54e472-9822-4fa7-91a2-e40f8ed111ac.jpg';
+
+  const handleOpenAuth = (mode: 'login' | 'register') => {
+    if (typeof onOpenAuth === 'function') {
+      try {
+        onOpenAuth(mode);
+        return;
+      } catch (err) {
+        console.error('Error in onOpenAuth:', err);
+      }
+    }
+    if (mode === 'register' && typeof onOpenRegister === 'function') {
+      try {
+        onOpenRegister();
+        return;
+      } catch (err) {
+        console.error('Error in onOpenRegister:', err);
+      }
+    }
+    if (typeof onOpenLogin === 'function') {
+      try {
+        onOpenLogin();
+        return;
+      } catch (err) {
+        console.error('Error in onOpenLogin:', err);
+      }
+    }
+  };
+
+  const handleExplore = () => {
+    if (typeof onExplore === 'function') {
+      try {
+        onExplore();
+        return;
+      } catch (err) {
+        console.error('Error in onExplore:', err);
+      }
+    }
+    handleOpenAuth('login');
+  };
 
   const faqs = [
     {
@@ -112,14 +158,14 @@ export const LandingView: React.FC<LandingViewProps> = ({ onOpenAuth, onExplore 
           className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5"
         >
           <button
-            onClick={() => onOpenAuth('register')}
+            onClick={() => handleOpenAuth('register')}
             className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-base shadow-md shadow-purple-600/25 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
           >
             <span>Mulai Sekarang</span>
             <ArrowRight className="w-5 h-5" />
           </button>
           <button
-            onClick={() => onOpenAuth('login')}
+            onClick={() => handleOpenAuth('login')}
             className="w-full sm:w-auto px-8 py-3.5 rounded-2xl border border-purple-200 bg-white hover:bg-purple-50 text-purple-900 font-bold text-base transition-all shadow-sm active:scale-95"
           >
             Masuk / Login
@@ -183,7 +229,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onOpenAuth, onExplore 
             </div>
 
             <button
-              onClick={() => onOpenAuth('register')}
+              onClick={() => handleOpenAuth('register')}
               className="w-full py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-sm font-bold text-white shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <span>Order Eceran Sekarang</span>
@@ -235,7 +281,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onOpenAuth, onExplore 
             </div>
 
             <button
-              onClick={() => onOpenAuth('register')}
+              onClick={() => handleOpenAuth('register')}
               className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-sm font-bold text-white shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <span>Order Bulk Sekarang</span>
@@ -385,13 +431,13 @@ export const LandingView: React.FC<LandingViewProps> = ({ onOpenAuth, onExplore 
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <button
-              onClick={() => onOpenAuth('register')}
+              onClick={() => handleOpenAuth('register')}
               className="px-6 py-3.5 rounded-2xl bg-white text-purple-900 font-bold text-sm hover:bg-purple-50 shadow-md transition-all active:scale-95"
             >
               Daftar Sekarang
             </button>
             <button
-              onClick={onExplore}
+              onClick={handleExplore}
               className="px-6 py-3.5 rounded-2xl border border-white/40 bg-white/10 hover:bg-white/20 text-white font-bold text-sm backdrop-blur-sm transition-all"
             >
               Lihat Dashboard
