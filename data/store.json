@@ -1,1 +1,83 @@
-
+{
+  "users": [
+    {
+      "id": "usr_admin",
+      "username": "admin",
+      "email": "admin@azrylstore.com",
+      "passwordHash": "8425c6d6aa14b260e93ad4311c66c998ff2c2c665c95bf2720740546da9aec36",
+      "salt": "5c936edeb6eeb1a8d9075f3a8b2e3147",
+      "balance": 100000,
+      "role": "admin",
+      "status": "active",
+      "isBlocked": false,
+      "createdAt": "2026-09-10T02:49:36.326Z"
+    },
+    {
+      "id": "usr_1789008847944_9vcpl",
+      "username": "azryl",
+      "email": "aprilazril67@gmail.com",
+      "passwordHash": "a110555da166cd2828f3ce97e3fe6f7c1828d9ef1bdfeee4857b2034d3297455",
+      "salt": "0d2022d36b3f1c5b57d54988941af78f",
+      "balance": 0,
+      "role": "user",
+      "status": "active",
+      "isBlocked": false,
+      "createdAt": "2026-09-10T02:54:07.944Z"
+    },
+    {
+      "id": "usr_1789009412490_2i4u1",
+      "username": "testerfire",
+      "email": "testerfire@gmail.com",
+      "passwordHash": "00b5cce72c39d4739728663d117ff3862737db0e2e3c6476826f355dab06c0c8",
+      "salt": "dab0ad2950994cca613d9e4493bddea2",
+      "balance": 0,
+      "role": "user",
+      "status": "active",
+      "isBlocked": false,
+      "createdAt": "2026-09-10T03:03:32.490Z"
+    }
+  ],
+  "deposits": [],
+  "orders": [],
+  "transactions": [],
+  "admin_logs": [
+    {
+      "id": "log_init",
+      "adminId": "usr_admin",
+      "adminUsername": "admin",
+      "action": "SYSTEM_INIT",
+      "description": "Sistem AZRYLSTORE diinisialisasi",
+      "createdAt": "2026-09-10T02:49:36.326Z"
+    }
+  ],
+  "settings": {
+    "isStoreOpen": true,
+    "closeReason": "Toko sedang tutup sementara untuk pemeliharaan sistem. Silakan cek kembali nanti.",
+    "priceEceran": 300,
+    "priceBulk": 400,
+    "minDeposit": 1000,
+    "bulkMin": 1,
+    "bulkMax": 5,
+    "danaNumber": "085786683784",
+    "danaName": "JEJE",
+    "qrImage": "https://cdn.phototourl.com/free/2026-09-10-f548b8a3-78db-462f-bf15-59b7ce782943.jpg",
+    "amPhoto": "https://cdn.phototourl.com/free/2026-09-10-6e54e472-9822-4fa7-91a2-e40f8ed111ac.jpg",
+    "waAdmin": "https://wa.me/6285199219856",
+    "waChannel": "https://whatsapp.com/channel/0029VbCwLl7J3jv1QSig1V0C",
+    "announcement": "Server AM Premium 24/7 Aktif! Garansi akun aktif & support admin via WhatsApp."
+  },
+  "sessions": [
+    {
+      "token": "27253eb9a015f3a53e1301de6776a9a4ce377fdf65ef271a1c45a40d981a88b2",
+      "userId": "usr_1789008847944_9vcpl",
+      "createdAt": "2026-09-10T02:54:07.944Z",
+      "expiresAt": "2026-09-17T02:54:07.944Z"
+    },
+    {
+      "token": "f364dff3642eaf675662f70e5d7139c26f110be0c36a235422db58e0d9908a96",
+      "userId": "usr_1789009412490_2i4u1",
+      "createdAt": "2026-09-10T03:03:32.490Z",
+      "expiresAt": "2026-09-17T03:03:32.490Z"
+    }
+  ]
+}
