@@ -164,14 +164,38 @@ app.post('/api/auth/login', (req: Request, res: Response) => {
 });
 
 // Current User Profile
-app.get('/api/auth/me', authMiddleware, (req: Request, res: Response) => {
-  const user = db.getUserById(req.user!.id);
+app.get('/api/auth/me', authMiddleware, async (req: Request, res: Response) => {
+  let user = db.getUserById(req.user!.id);
+  if (user && user.role !== 'admin') {
+    await db.refreshUsersFromFirestore();
+    user = db.getUserById(req.user!.id);
+  }
   if (!user) {
     res.status(404).json({ error: 'User tidak ditemukan' });
     return;
   }
   const { passwordHash: _, salt: __, ...publicUser } = user;
   res.json({ user: publicUser });
+});
+
+// Force sync role from Firebase Firestore
+app.post('/api/auth/sync-role', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    await db.refreshUsersFromFirestore();
+    const user = db.getUserById(req.user!.id);
+    if (!user) {
+      res.status(404).json({ error: 'User tidak ditemukan' });
+      return;
+    }
+    const { passwordHash: _, salt: __, ...publicUser } = user;
+    res.json({
+      message: 'Sinkronisasi role dari Firebase berhasil',
+      user: publicUser,
+      isAdmin: publicUser.role === 'admin',
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Gagal sinkronisasi dari Firebase: ' + err.message });
+  }
 });
 
 // Logout
