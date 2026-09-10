@@ -7,6 +7,7 @@ import {
   updateDoc,
   collection,
   getDocs,
+  onSnapshot,
   Firestore,
 } from 'firebase/firestore';
 import { User, Deposit, Order, Transaction, StoreSettings } from '../src/types.js';
@@ -33,7 +34,9 @@ const COLL_ORDERS = 'orders';
 const COLL_TRANSACTIONS = 'transactions';
 const COLL_SETTINGS = 'settings';
 
-export interface FirestoreUserRecord extends User {
+export interface FirestoreUserRecord extends Partial<User> {
+  id: string;
+  docId?: string;
   passwordHash?: string;
   salt?: string;
 }
@@ -104,7 +107,12 @@ export async function loadInitialDataFromFirestore(): Promise<{
     const usersSnap = await getDocs(collection(firestore, COLL_USERS));
     const users: FirestoreUserRecord[] = [];
     usersSnap.forEach((d) => {
-      users.push(d.data() as FirestoreUserRecord);
+      const data = d.data();
+      users.push({
+        ...data,
+        id: d.id, // Primary doc ID from Firestore
+        docId: d.id,
+      } as unknown as FirestoreUserRecord);
     });
 
     // 3. Deposits
@@ -144,3 +152,98 @@ export async function loadInitialDataFromFirestore(): Promise<{
     return null;
   }
 }
+
+export async function fetchAllUsersFromFirestore(): Promise<FirestoreUserRecord[]> {
+  try {
+    const snap = await getDocs(collection(firestore, COLL_USERS));
+    const list: FirestoreUserRecord[] = [];
+    snap.forEach((d) => {
+      const data = d.data();
+      list.push({
+        ...data,
+        id: d.id,
+      } as unknown as FirestoreUserRecord);
+    });
+    return list;
+  } catch (err: any) {
+    console.error('[FIREBASE] Error fetching users from Firestore:', err.message);
+    return [];
+  }
+}
+
+export function listenToFirestoreUsers(onUsersUpdated: (users: FirestoreUserRecord[]) => void): () => void {
+  try {
+    const unsubscribe = onSnapshot(
+      collection(firestore, COLL_USERS),
+      (snapshot) => {
+        const users: FirestoreUserRecord[] = [];
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          users.push({
+            ...data,
+            id: docSnap.id,
+          } as unknown as FirestoreUserRecord);
+        });
+        console.log(`[FIREBASE REALTIME] Received update for ${users.length} users from Firestore`);
+        onUsersUpdated(users);
+      },
+      (error) => {
+        console.error('[FIREBASE REALTIME] Error listening to users collection:', error.message);
+      }
+    );
+    return unsubscribe;
+  } catch (err: any) {
+    console.error('[FIREBASE REALTIME] Failed to attach users listener:', err.message);
+    return () => {};
+  }
+}
+
+export function listenToFirestoreSettings(onSettingsUpdated: (settings: StoreSettings) => void): () => void {
+  try {
+    const unsubscribe = onSnapshot(
+      doc(firestore, COLL_SETTINGS, 'store'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data() as StoreSettings;
+          console.log('[FIREBASE REALTIME] Received settings update from Firestore');
+          onSettingsUpdated(data);
+        }
+      },
+      (error) => {
+        console.error('[FIREBASE REALTIME] Error listening to settings:', error.message);
+      }
+    );
+    return unsubscribe;
+  } catch (err: any) {
+    console.error('[FIREBASE REALTIME] Failed to attach settings listener:', err.message);
+    return () => {};
+  }
+}
+
+export function listenToFirestoreDeposits(onDepositsUpdated: (deposits: Deposit[]) => void): () => void {
+  try {
+    const unsubscribe = onSnapshot(
+      collection(firestore, COLL_DEPOSITS),
+      (snapshot) => {
+        const list: Deposit[] = [];
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          list.push({
+            ...data,
+            id: data.id || docSnap.id,
+          } as Deposit);
+        });
+        console.log(`[FIREBASE REALTIME] Received update for ${list.length} deposits from Firestore`);
+        onDepositsUpdated(list);
+      },
+      (error) => {
+        console.error('[FIREBASE REALTIME] Error listening to deposits:', error.message);
+      }
+    );
+    return unsubscribe;
+  } catch (err: any) {
+    console.error('[FIREBASE REALTIME] Failed to attach deposits listener:', err.message);
+    return () => {};
+  }
+}
+
