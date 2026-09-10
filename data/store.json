@@ -1,46 +1,256 @@
 {
   "users": [
     {
-      "id": "usr_admin",
-      "username": "admin",
-      "email": "admin@azrylstore.com",
-      "passwordHash": "8425c6d6aa14b260e93ad4311c66c998ff2c2c665c95bf2720740546da9aec36",
-      "salt": "5c936edeb6eeb1a8d9075f3a8b2e3147",
-      "balance": 100000,
-      "role": "admin",
-      "status": "active",
-      "isBlocked": false,
-      "createdAt": "2026-09-10T02:49:36.326Z"
-    },
-    {
-      "id": "usr_1789008847944_9vcpl",
-      "username": "azryl",
       "email": "aprilazril67@gmail.com",
-      "passwordHash": "a110555da166cd2828f3ce97e3fe6f7c1828d9ef1bdfeee4857b2034d3297455",
-      "salt": "0d2022d36b3f1c5b57d54988941af78f",
-      "balance": 0,
+      "username": "azryl",
+      "id": "usr_1789008847944_9vcpl",
       "role": "user",
-      "status": "active",
+      "updatedAt": "2026-09-10T03:03:30.303Z",
+      "salt": "0d2022d36b3f1c5b57d54988941af78f",
+      "passwordHash": "a110555da166cd2828f3ce97e3fe6f7c1828d9ef1bdfeee4857b2034d3297455",
+      "balance": 0,
       "isBlocked": false,
+      "status": "active",
       "createdAt": "2026-09-10T02:54:07.944Z"
     },
     {
       "id": "usr_1789009412490_2i4u1",
-      "username": "testerfire",
+      "updatedAt": "2026-09-10T03:03:32.490Z",
+      "isBlocked": false,
+      "status": "active",
       "email": "testerfire@gmail.com",
       "passwordHash": "00b5cce72c39d4739728663d117ff3862737db0e2e3c6476826f355dab06c0c8",
       "salt": "dab0ad2950994cca613d9e4493bddea2",
-      "balance": 0,
+      "username": "testerfire",
+      "createdAt": "2026-09-10T03:03:32.490Z",
+      "role": "user",
+      "balance": 0
+    },
+    {
+      "createdAt": "2026-09-10T02:49:36.326Z",
+      "updatedAt": "2026-09-10T03:09:35.934Z",
+      "passwordHash": "2a154d6807e28aec5fa7a8e73e4a5b8956cd00422f5cb15935ec854b6b640517",
+      "isBlocked": false,
+      "status": "active",
+      "id": "usr_admin",
+      "username": "admin",
+      "email": "admin@azrylstore.com",
+      "balance": 99600,
+      "salt": "5a664648bb091801d0cc13c005a43e41",
+      "role": "admin"
+    },
+    {
+      "id": "usr_1789011305266_rj7oc",
+      "username": "azryll",
+      "email": "akunmilganteng94@gmail.com",
+      "passwordHash": "c87e99ba40abfa217cbf722b1858baecfcae940c3f027d52edf7331681ab95fd",
+      "salt": "65640fae1db8bbb51c2fcb77c36a8e6b",
+      "balance": 19600,
+      "role": "admin",
+      "status": "active",
+      "isBlocked": false,
+      "createdAt": "2026-09-10T03:35:05.266Z"
+    },
+    {
+      "id": "usr_1789012115674_qpzql",
+      "username": "anjai",
+      "email": "anjai@gmail.ckm",
+      "passwordHash": "93d129a541d45ac9d71565730ed6cfed572fb23b2babe72a1c33a975af3fe1d8",
+      "salt": "4c361888fdae0707989d1aba9d5df692",
+      "balance": 1000,
       "role": "user",
       "status": "active",
       "isBlocked": false,
-      "createdAt": "2026-09-10T03:03:32.490Z"
+      "createdAt": "2026-09-10T03:48:35.674Z"
     }
   ],
-  "deposits": [],
-  "orders": [],
-  "transactions": [],
+  "deposits": [
+    {
+      "id": "DEP-136425799",
+      "confirmedAt": "2026-09-10T03:54:47.789Z",
+      "confirmedBy": "admin",
+      "userId": "usr_1789012115674_qpzql",
+      "payerName": "anjai",
+      "updatedAt": "2026-09-10T03:49:56.713Z",
+      "createdAt": "2026-09-10T03:48:56.425Z",
+      "status": "APPROVED",
+      "proofNote": "Transfer QRIS JEJE via DANA",
+      "username": "anjai",
+      "paymentMethod": "QRIS",
+      "amount": 1000
+    },
+    {
+      "status": "PENDING",
+      "proofNote": "",
+      "amount": 700000,
+      "createdAt": "2026-09-10T03:54:15.008Z",
+      "updatedAt": "2026-09-10T03:54:20.425Z",
+      "username": "azryl",
+      "payerName": "azryl",
+      "id": "DEP-455008638",
+      "paymentMethod": "QRIS",
+      "userId": "usr_1789008847944_9vcpl"
+    },
+    {
+      "username": "anjai",
+      "status": "PENDING",
+      "amount": 25000,
+      "payerName": "ANJAI TESTER",
+      "paymentMethod": "QRIS",
+      "proofNote": "Transfer via QRIS - Bukti terlampir",
+      "createdAt": "2026-09-10T03:54:54.915Z",
+      "id": "DEP-237713963",
+      "userId": "usr_1789012115674_qpzql"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-321420323",
+      "userId": "usr_1789011305266_rj7oc",
+      "username": "azryll",
+      "product": "AM_BULK",
+      "quantity": 1,
+      "price": 400,
+      "status": "SUCCESS",
+      "createdAt": "2026-09-10T03:52:01.420Z",
+      "apiResponse": {
+        "creator": "dapjisync",
+        "status": true,
+        "data": {
+          "message": "Akun Berhasil Dibuat",
+          "total": 1,
+          "emails": [
+            {
+              "email": "amprempz7rie@akunlama.com",
+              "access_link": "https://akunlama.com/inbox/amprempz7rie/list"
+            }
+          ]
+        }
+      },
+      "result": "#1 Email: amprempz7rie@akunlama.com\nInbox Link: https://akunlama.com/inbox/amprempz7rie/list",
+      "completedAt": "2026-09-10T03:52:09.962Z"
+    },
+    {
+      "id": "ORD-775936234",
+      "userId": "usr_admin",
+      "username": "admin",
+      "product": "AM_BULK",
+      "quantity": 1,
+      "price": 400,
+      "status": "SUCCESS",
+      "createdAt": "2026-09-10T03:09:35.936Z",
+      "apiResponse": {
+        "creator": "dapjisync",
+        "status": true,
+        "data": {
+          "message": "Akun Berhasil Dibuat",
+          "total": 1,
+          "emails": [
+            {
+              "email": "amprembwox5b@akunlama.com",
+              "access_link": "https://akunlama.com/inbox/amprembwox5b/list"
+            }
+          ]
+        }
+      },
+      "result": "#1 Email: amprembwox5b@akunlama.com\nInbox Link: https://akunlama.com/inbox/amprembwox5b/list",
+      "completedAt": "2026-09-10T03:09:47.501Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx_1789012487788_6fwy",
+      "userId": "usr_1789012115674_qpzql",
+      "type": "DEPOSIT",
+      "amount": 1000,
+      "balanceBefore": 0,
+      "balanceAfter": 1000,
+      "reference": "DEP-136425799",
+      "description": "Deposit Rp1.000 via QRIS disetujui",
+      "createdAt": "2026-09-10T03:54:47.788Z"
+    },
+    {
+      "balanceAfter": 99600,
+      "balanceBefore": 100000,
+      "userId": "usr_admin",
+      "type": "ORDER_AM",
+      "amount": 400,
+      "createdAt": "2026-09-10T03:09:35.933Z",
+      "id": "tx_1789009775933_xs5t",
+      "reference": "BULK-1789009775933",
+      "description": "Pembelian AM Premium Bulk (1 akun)"
+    },
+    {
+      "amount": 10000,
+      "id": "tx_1789012268328_n9y6",
+      "type": "ADMIN_ADJUST",
+      "balanceBefore": 0,
+      "balanceAfter": 10000,
+      "description": "Penambahan saldo manual oleh admin",
+      "createdAt": "2026-09-10T03:51:08.328Z",
+      "userId": "usr_1789011305266_rj7oc",
+      "reference": "ADJ-1789012268328"
+    },
+    {
+      "userId": "usr_1789011305266_rj7oc",
+      "balanceAfter": 20000,
+      "id": "tx_1789012299577_fqp5",
+      "balanceBefore": 10000,
+      "createdAt": "2026-09-10T03:51:39.577Z",
+      "amount": 10000,
+      "description": "Penambahan saldo manual oleh admin",
+      "reference": "ADJ-1789012299577",
+      "type": "ADMIN_ADJUST"
+    },
+    {
+      "createdAt": "2026-09-10T03:52:01.419Z",
+      "id": "tx_1789012321419_fwaq",
+      "userId": "usr_1789011305266_rj7oc",
+      "description": "Pembelian AM Premium Bulk (1 akun)",
+      "reference": "BULK-1789012321419",
+      "type": "ORDER_AM",
+      "balanceAfter": 19600,
+      "amount": 400,
+      "balanceBefore": 20000
+    }
+  ],
   "admin_logs": [
+    {
+      "id": "log_1789012487789_6p65",
+      "adminId": "usr_admin",
+      "adminUsername": "admin",
+      "action": "APPROVE_DEPOSIT",
+      "targetUser": "anjai",
+      "description": "Menyetujui deposit DEP-136425799 nominal Rp1.000 untuk @anjai",
+      "createdAt": "2026-09-10T03:54:47.789Z"
+    },
+    {
+      "id": "log_1789012299578_fbb7",
+      "adminId": "usr_1789011305266_rj7oc",
+      "adminUsername": "azryll",
+      "action": "ADJUST_BALANCE",
+      "targetUser": "azryll",
+      "description": "Penyesuaian saldo @azryll sebesar +Rp10.000. Alasan: Penambahan saldo manual oleh admin",
+      "createdAt": "2026-09-10T03:51:39.578Z"
+    },
+    {
+      "id": "log_1789012268330_9hdn",
+      "adminId": "usr_1789011305266_rj7oc",
+      "adminUsername": "azryll",
+      "action": "ADJUST_BALANCE",
+      "targetUser": "azryll",
+      "description": "Penyesuaian saldo @azryll sebesar +Rp10.000. Alasan: Penambahan saldo manual oleh admin",
+      "createdAt": "2026-09-10T03:51:08.330Z"
+    },
+    {
+      "id": "log_1789012196730_ce4x",
+      "adminId": "usr_admin",
+      "adminUsername": "azryll",
+      "action": "REJECT_DEPOSIT",
+      "targetUser": "anjai",
+      "description": "Menolak deposit DEP-136425799 nominal Rp1.000 untuk @anjai",
+      "createdAt": "2026-09-10T03:49:56.730Z"
+    },
     {
       "id": "log_init",
       "adminId": "usr_admin",
@@ -64,20 +274,21 @@
     "amPhoto": "https://cdn.phototourl.com/free/2026-09-10-6e54e472-9822-4fa7-91a2-e40f8ed111ac.jpg",
     "waAdmin": "https://wa.me/6285199219856",
     "waChannel": "https://whatsapp.com/channel/0029VbCwLl7J3jv1QSig1V0C",
-    "announcement": "Server AM Premium 24/7 Aktif! Garansi akun aktif & support admin via WhatsApp."
+    "announcement": "Server AM Premium 24/7 Aktif! Garansi akun aktif & support admin via WhatsApp.",
+    "updatedAt": "2026-09-10T03:03:30.301Z"
   },
   "sessions": [
-    {
-      "token": "27253eb9a015f3a53e1301de6776a9a4ce377fdf65ef271a1c45a40d981a88b2",
-      "userId": "usr_1789008847944_9vcpl",
-      "createdAt": "2026-09-10T02:54:07.944Z",
-      "expiresAt": "2026-09-17T02:54:07.944Z"
-    },
     {
       "token": "f364dff3642eaf675662f70e5d7139c26f110be0c36a235422db58e0d9908a96",
       "userId": "usr_1789009412490_2i4u1",
       "createdAt": "2026-09-10T03:03:32.490Z",
       "expiresAt": "2026-09-17T03:03:32.490Z"
+    },
+    {
+      "token": "cde090ad2f7345a54bd1be45f87842cbc3d9bd1b20cb86be4a054714724255cc",
+      "userId": "usr_admin",
+      "createdAt": "2026-09-10T03:54:47.754Z",
+      "expiresAt": "2026-09-17T03:54:47.754Z"
     }
   ]
 }
