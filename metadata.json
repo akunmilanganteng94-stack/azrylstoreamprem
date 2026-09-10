@@ -1,0 +1,6 @@
+{
+  "name": "AZRYLSTORE",
+  "description": "Marketplace & SaaS layanan Alight Motion Premium Eceran dan Bulk modern, cepat, dan terpercaya.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
